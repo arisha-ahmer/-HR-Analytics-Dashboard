@@ -1,0 +1,99 @@
+# 📈 DAX Measures — HR Analytics Dashboard
+
+This document lists all **DAX (Data Analysis Expressions)** measures used in the HR Analytics Dashboard, with explanations.
+
+DAX is the formula language of Power BI. These measures power the KPI cards and visuals on the dashboard.
+
+---
+
+## 1. Attrition Count
+
+Counts employees who have left the company.
+
+```dax
+Attrition Count = 
+CALCULATE(
+    COUNT(HR[EmployeeNumber]),
+    HR[Attrition] = "Yes"
+)
+Result on dashboard: 146
+Explanation: Filters the HR table where Attrition = "Yes" and counts the employee numbers.
+
+2. Attrition Rate
+Percentage of employees who left.
+
+dax
+Attrition Rate = 
+DIVIDE([Attrition Count], [Total Employees], 0)
+Result on dashboard: 24.6%
+Explanation: DIVIDE safely divides two measures and returns 0 if the denominator is zero (avoids errors).
+
+3. Active Employees
+Counts employees who are still with the company.
+
+dax
+Active Employees = 
+CALCULATE(
+    COUNT(HR[EmployeeNumber]),
+    HR[Attrition] = "No"
+)
+Result on dashboard: 448
+Explanation: Same pattern as Attrition Count, but filters for Attrition = "No".
+
+4. Total Employees
+Total headcount in the dataset.
+
+dax
+Total Employees = 
+COUNT(HR[EmployeeNumber])
+Result on dashboard: 594
+Explanation: Simply counts every row in the HR table.
+
+5. Average Tenure
+Average number of years employees have stayed at the company.
+
+dax
+Average Tenure = 
+AVERAGE(HR[YearsAtCompany])
+Result on dashboard: 5.04
+Explanation: Averages the YearsAtCompany column across all employees.
+
+6. Average Monthly Income
+Average monthly salary across all employees.
+
+dax
+Average Monthly Income = 
+AVERAGE(HR[MonthlyIncome])
+Result on dashboard: 4K
+Explanation: Averages the MonthlyIncome column and is formatted as thousands (K) on the card.
+
+7. Average Age
+Average age of the workforce.
+
+dax
+Average Age = 
+AVERAGE(HR[Age])
+Result on dashboard: 28
+Explanation: Averages the Age column across all employees.
+
+🧠 Key DAX Concepts Used
+Concept	Purpose	Example
+CALCULATE()	Changes filter context	Used in Attrition Count
+COUNT()	Counts non-blank values	Used in Total Employees
+DIVIDE()	Safe division (no errors)	Used in Attrition Rate
+AVERAGE()	Calculates mean	Used in Avg Tenure / Income / Age
+⚙️ Power Query (M Language) — Related Work
+The following transformations were done in Power Query before DAX measures were built:
+
+Age Groups — created custom buckets (e.g., 18–25, 26–35, 36–45, 46–55, 55+)
+
+Salary Slabs — created income ranges (e.g., Upto 5K, 5K–10K, 10K–15K, 15K+)
+
+Data Cleaning — removed nulls, standardized column names, fixed data types
+
+📌 Notes
+All measures are stored in the _Measures table inside the .pbix file.
+
+Measures respond dynamically to the slicers (Age Group, Department, Over Time, Gender).
+
+The .pbix file requires Power BI Desktop to open.
